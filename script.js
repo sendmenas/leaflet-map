@@ -34,10 +34,11 @@
             addTopoData(JSON.parse(this.responseText));
        }
     };
-    xhttp.open("GET", "https://gist.githubusercontent.com/moklick/c1cc83e18a6fafd9af81/raw/990220dca05c16bb80041f4306cfb3179aa8d88b/countries.topo.json");
+    xhttp.open("GET", "https://raw.githubusercontent.com/sendmenas/leaflet-map/master/map.geojson");
     xhttp.send();
 
     function addTopoData(topoData) {
+        console.log(topoData);
         topoLayer.addData(topoData);
         topoLayer.addTo(map);
         addPopupsToLayers();
@@ -60,10 +61,6 @@
                     mouseout: resetHighlight,
                     mousemove: updatePopupPosition
                 });
-                console.log(layer.feature.properties.name);
-                if (layer.feature.properties.name.indexOf('Antarctic') > -1) {
-                    layer.remove();
-                }
             }
         });
     };

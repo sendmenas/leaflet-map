@@ -12,7 +12,7 @@ body {
 }
 
 body > .leaflet-container {
-	overflow: initial; !important;
+	overflow: initial;
 }
 
 #worldmap {
