@@ -37,13 +37,13 @@
             addTopoData(JSON.parse(this.responseText));
        }
     };
-    xhttp.open("GET", "https://raw.githubusercontent.com/sendmenas/leaflet-map/master/custom.topo.json");
+    xhttp.open("GET", "https://raw.githubusercontent.com/sendmenas/leaflet-map/master/map.topojson");
     xhttp.send();
 
     function addTopoData(topoData) {
         topoLayer.addData(topoData);
         topoLayer.addTo(map);
-        // map.setView([40, 0]);
+        map.setView([40, 0]);
         updateMapStyles();
         addPopupsToLayers();
     }
@@ -98,7 +98,7 @@
     function resetHighlight(e) {
         console.log(e.target);
         topoLayer.resetStyle(e.target);
-        // e.target.closePopup();
+        e.target.closePopup();
     }
 
     function updatePopupPosition(e) {
