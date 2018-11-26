@@ -2,8 +2,11 @@
     var map = L.map('worldmap', {
         zoomControl: false,
         zoomSnap: 0,
-    }).setView([0, 0], 0);
-    map.fitWorld(); 
+    });
+    map.fitWorld();
+    L.Path.mergeOptions({
+        weight: 1,
+    });
 
     map.touchZoom.disable();
     map.doubleClickZoom.disable();
@@ -38,10 +41,17 @@
     xhttp.send();
 
     function addTopoData(topoData) {
-        console.log(topoData);
         topoLayer.addData(topoData);
         topoLayer.addTo(map);
+        map.setView([40, 0]);
+        updateMapStyles();
         addPopupsToLayers();
+    }
+
+    function updateMapStyles() {
+        map.eachLayer(layer => {
+            console.log(layer);
+        });
     }
 
     function addPopupsToLayers() {
@@ -72,8 +82,6 @@
         let popup = e.target.getPopup();
         popup.setLatLng(e.latlng).openOn(map);
 
-        
-
         layer.setStyle({
             weight: 1,
             color: '#666',
@@ -88,6 +96,7 @@
     }
 
     function resetHighlight(e) {
+        console.log(e.target);
         topoLayer.resetStyle(e.target);
         e.target.closePopup();
     }
