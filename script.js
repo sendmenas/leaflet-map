@@ -15,34 +15,21 @@
     map.keyboard.disable();
     map.dragging.disable();
 
-    L.TopoJSON = L.GeoJSON.extend({  
-      addData: function(jsonData) {    
-        if (jsonData.type === 'Topology') {
-          for (key in jsonData.objects) {
-            geojson = topojson.feature(jsonData, jsonData.objects[key]);
-            L.GeoJSON.prototype.addData.call(this, geojson);
-          }
-        }    
-        else {
-          L.GeoJSON.prototype.addData.call(this, jsonData);
-        }
-      }  
-    });
-
-    const topoLayer = new L.TopoJSON();
+    const mapLayer = new L.geoJSON();
+    mapLayer.setStyle({smoothFactor: 5});
 
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            addTopoData(JSON.parse(this.responseText));
+            mapLayer.addData(JSON.parse(this.responseText));
+            updateMap();
        }
     };
-    xhttp.open("GET", "https://raw.githubusercontent.com/sendmenas/leaflet-map/master/map.topojson");
+    xhttp.open("GET", "https://raw.githubusercontent.com/sendmenas/leaflet-map/master/map.geojson");
     xhttp.send();
 
-    function addTopoData(topoData) {
-        topoLayer.addData(topoData);
-        topoLayer.addTo(map);
+    function updateMap(topoData) {
+        mapLayer.addTo(map);
         map.setView([40, 0]);
         updateMapStyles();
         addPopupsToLayers();
@@ -95,7 +82,7 @@
     }
 
     function resetHighlight(e) {
-        topoLayer.resetStyle(e.target);
+        mapLayer.resetStyle(e.target);
         e.target.closePopup();
     }
 
