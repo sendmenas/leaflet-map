@@ -50,7 +50,6 @@
 
     function updateMapStyles() {
         map.eachLayer(layer => {
-            console.log(layer);
         });
     }
 
@@ -96,7 +95,6 @@
     }
 
     function resetHighlight(e) {
-        console.log(e.target);
         topoLayer.resetStyle(e.target);
         e.target.closePopup();
     }
@@ -105,4 +103,9 @@
         let popup = e.target.getPopup();
         popup.setLatLng(e.latlng);
     }
+
+    window.addEventListener('resize', evt => {
+        map.fitWorld();
+        map.setView([40, 0]);
+    }); 
 })();
