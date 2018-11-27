@@ -9,7 +9,7 @@
         zoomSnap: 0,
         attributionControl: false,
     });
-    map.fitWorld();
+    
     L.Path.mergeOptions({
         weight: 1,
     });
@@ -26,7 +26,6 @@
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            // mapLayer.addData(JSON.parse(this.responseText));
             updateMap(JSON.parse(this.responseText));
        }
     };
@@ -38,7 +37,6 @@
             if (jsonData.type === 'Topology') {
                 for (key in jsonData.objects) {
                     geojson = topojson.feature(jsonData, jsonData.objects[key]);
-                    console.log(geojson);
                     L.GeoJSON.prototype.addData.call(this, geojson);
                 }
             }
@@ -53,8 +51,11 @@
     function updateMap(topoData) {
         topoLayer.addData(topoData);
         topoLayer.addTo(map);
-        // mapLayer.addTo(map);
-        map.setView([40, 0], 1, true);
+
+        // THIS IS NEW
+        map.fitBounds(topoLayer.getBounds());
+
+        // map.setView([40, 0], 1, true);
         addPopupsToLayers();
     }
 
