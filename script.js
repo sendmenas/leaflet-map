@@ -22,20 +22,38 @@
     map.dragging.disable();
 
     const mapLayer = new L.geoJSON();
-    mapLayer.setStyle({smoothFactor: 5});
 
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            mapLayer.addData(JSON.parse(this.responseText));
-            updateMap();
+            // mapLayer.addData(JSON.parse(this.responseText));
+            updateMap(JSON.parse(this.responseText));
        }
     };
-    xhttp.open("GET", "https://raw.githubusercontent.com/sendmenas/leaflet-map/master/map.geojson");
+    xhttp.open("GET", "https://raw.githubusercontent.com/sendmenas/leaflet-map/master/map.topojson");
     xhttp.send();
 
+    L.TopoJSON = L.GeoJSON.extend({
+        addData: function(jsonData) {
+            if (jsonData.type === 'Topology') {
+                for (key in jsonData.objects) {
+                    geojson = topojson.feature(jsonData, jsonData.objects[key]);
+                    console.log(geojson);
+                    L.GeoJSON.prototype.addData.call(this, geojson);
+                }
+            }
+            else {
+                L.GeoJSON.prototype.addData.call(this, jsonData);
+            }
+        }
+    });
+
+    const topoLayer = new L.TopoJSON();
+
     function updateMap(topoData) {
-        mapLayer.addTo(map);
+        topoLayer.addData(topoData);
+        topoLayer.addTo(map);
+        // mapLayer.addTo(map);
         map.setView([40, 0], 1, true);
         addPopupsToLayers();
     }
